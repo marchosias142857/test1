@@ -16,40 +16,62 @@
 <link rel="icon" href="image3.png">
 
 <style>
-html,body{
-margin:0;
-padding:0;
-background:#fff;
-overflow-x:hidden;
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    overflow-x: hidden;
 }
-.top{
-position:sticky;
-top:0;
-z-index:999;
-padding-top:env(safe-area-inset-top);
-background:#fff;
+
+.top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    padding-top: env(safe-area-inset-top);
+    background: #fff;
 }
-img{
-display:block;
-width:100%;
-height:auto;
--webkit-user-drag:none;
-user-select:none;
+
+.top img,
+.bottom-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    -webkit-user-drag: none;
+    user-select: none;
+}
+
+.bottom-image {
+    position: relative;
+    z-index: 1000;
+    margin-top: calc(var(--top-height, 0px) + env(safe-area-inset-top));
 }
 </style>
 </head>
 
 <body>
 
-<div class="top">
-<img src="image1.jpg" alt="">
+<div class="top" id="topArea">
+    <img src="image1.jpg" alt="">
 </div>
 
-<img src="image2.jpg" alt="">
+<img class="bottom-image" src="image2.jpg" alt="">
 
 <script>
-if("serviceWorker" in navigator){
-navigator.serviceWorker.register("sw.js");
+function updateTopHeight() {
+    const topArea = document.getElementById("topArea");
+    document.documentElement.style.setProperty(
+        "--top-height",
+        topArea.offsetHeight + "px"
+    );
+}
+
+window.addEventListener("load", updateTopHeight);
+window.addEventListener("resize", updateTopHeight);
+
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js");
 }
 </script>
 
