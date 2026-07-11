@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>图片展示</title>
+
+<meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="图片展示">
+<meta name="mobile-web-app-capable" content="yes">
+
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="image3.png">
+<link rel="icon" href="image3.png">
+
+<style>
+html,body{
+margin:0;
+padding:0;
+background:#fff;
+overflow-x:hidden;
+}
+.top{
+position:sticky;
+top:0;
+z-index:999;
+padding-top:env(safe-area-inset-top);
+background:#fff;
+}
+img{
+display:block;
+width:100%;
+height:auto;
+-webkit-user-drag:none;
+user-select:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+<img src="image1.jpg" alt="">
+</div>
+
+<img src="image2.jpg" alt="">
+
+<script>
+if("serviceWorker" in navigator){
+navigator.serviceWorker.register("sw.js");
+}
+</script>
+
+</body>
+</html>
