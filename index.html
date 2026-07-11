@@ -2,12 +2,23 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+>
+
 <title>图片展示</title>
 
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<!-- 让网页延伸到灵动岛和状态栏下面 -->
+<meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+>
+
 <meta name="apple-mobile-web-app-title" content="图片展示">
 <meta name="mobile-web-app-capable" content="yes">
 
@@ -16,25 +27,34 @@
 <link rel="icon" href="image3.png">
 
 <style>
-html, body {
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
     margin: 0;
     padding: 0;
-    background: #fff;
+    width: 100%;
+    min-height: 100%;
+    background: #ffffff;
     overflow-x: hidden;
 }
 
+/*
+image1 固定在最顶部，并延伸到灵动岛和状态栏下面。
+不要添加 safe-area-inset-top，否则会产生顶部留白。
+*/
 .top {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 999;
-    padding-top: env(safe-area-inset-top);
-    background: #fff;
+    z-index: 9999;
+    background: #ffffff;
 }
 
-.top img,
-.bottom-image {
+.top img {
     display: block;
     width: 100%;
     height: auto;
@@ -42,10 +62,21 @@ html, body {
     user-select: none;
 }
 
+/*
+image2 位于 image1 下方。
+
+z-index 必须低于 image1，
+这样滚动时 image2 永远不会盖住 image1。
+*/
 .bottom-image {
     position: relative;
-    z-index: 1000;
-    margin-top: calc(var(--top-height, 0px) + env(safe-area-inset-top));
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: var(--top-height, 0px);
+    -webkit-user-drag: none;
+    user-select: none;
 }
 </style>
 </head>
@@ -53,22 +84,36 @@ html, body {
 <body>
 
 <div class="top" id="topArea">
-    <img src="image1.jpg" alt="">
+    <img id="topImage" src="image1.jpg" alt="">
 </div>
 
-<img class="bottom-image" src="image2.jpg" alt="">
+<img
+    class="bottom-image"
+    src="image2.jpg"
+    alt=""
+>
 
 <script>
 function updateTopHeight() {
     const topArea = document.getElementById("topArea");
+
     document.documentElement.style.setProperty(
         "--top-height",
         topArea.offsetHeight + "px"
     );
 }
 
+const topImage = document.getElementById("topImage");
+
+if (topImage.complete) {
+    updateTopHeight();
+} else {
+    topImage.addEventListener("load", updateTopHeight);
+}
+
 window.addEventListener("load", updateTopHeight);
 window.addEventListener("resize", updateTopHeight);
+window.addEventListener("orientationchange", updateTopHeight);
 
 if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("sw.js");
